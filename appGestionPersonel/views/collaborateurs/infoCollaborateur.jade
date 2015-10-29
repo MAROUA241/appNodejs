@@ -1,0 +1,42 @@
+extends ../layout
+
+
+
+block content
+	div(class='body'  ng-app="collaborateur" ng-controller="collaborateur" )
+		h1 Fiche d'information de collaborateur
+		hr
+		hr
+		br
+		br
+		ul
+			li Nom : {{ collaborateur.nom }}
+			br
+			li Prenom :{{ collaborateur.prenom }}
+			br
+			li Date de naissance :{{ collaborateur.date_naissance | date : format : timezone}}
+			br
+			li Poste : {{ collaborateur.poste}}
+			br
+			li Date d'arrivée : {{ collaborateur.date_arrivee | date : format : timezone}}
+			br
+			li Salaire : {{ collaborateur.salaire}}
+			br
+			li Numéro d'arrivée:{{ collaborateur.numero_arrivee}}
+			br
+			br
+		hr
+		hr
+
+
+
+	script(text="text/javascript").
+		var app = angular.module('collaborateur', []);
+		app.controller('collaborateur', function($scope, $http, $location) {
+			$http.get("/collaborateurs/action/#{id}")
+				.success(function(response) {
+					$scope.collaborateur = response;
+				});
+ 
+		
+		});

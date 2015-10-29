@@ -1,0 +1,37 @@
+extends ../layout
+
+block content
+	h1 La liste de collaborateurs
+	.posts_container(ng-app="collaborateursListApp" ng-controller="getCollaborateurs")
+		div(class='panel panel-post' ng-repeat="collaborateur in collaborateurs")
+			.panel-heading
+				.post_options
+					a(href="/collaborateurs/edit/{{ collaborateur._id }}")
+						button(class='post_option post_remove glyphicon glyphicon-pencil')
+					a(href="/collaborateurs/delete/{{ collaborateur._id }}")
+						button(class='post_option post_remove glyphicon glyphicon-remove' )
+				.post_title_container
+					span.collaborateur_title
+					br
+					a(href="/collaborateurs/{{ collaborateur._id }}")  {{ collaborateur.prenom }} {{ collaborateur.nom }}
+					br
+					br
+				
+				
+
+			
+	script(text="text/javascript").
+		var app = angular.module('collaborateursListApp', []);
+		app.controller('getCollaborateurs', function($scope, $http, $location) {
+			$http.get("/collaborateurs/action/")
+				.success(function(response) {
+					
+					var tab = [];
+							angular.forEach(response, function(collaborateur, key) {
+								if(collaborateur.date_sortie ==null )
+							  	this.push(collaborateur);
+							}, tab);
+							$scope.collaborateurs = tab;
+					
+				});
+		});

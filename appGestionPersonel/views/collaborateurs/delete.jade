@@ -1,0 +1,54 @@
+block content
+	if !nolayout
+		extends ../layout
+
+
+	if id
+		- var method = "PUT"
+		- var action = "/collaborateurs/action/"+id
+		- var legend = "Supprimer un collaborateur"
+
+
+
+	form.form-horizontal(id="formAddPost" role="form" ng-app="postEditApp" ng-controller="getPost" novalidate)
+		fieldset
+			legend= legend
+			h1 vous supprimer {{ collaborateur.nom}}
+			.form-group
+				label(for="date_sortie " class="col-sm-2 control-label") date de sortie  :
+				div.col-sm-10
+					input.form-control(type="date" name="date_sortie " id="date_sortie " ng-model="collaborateur.date_sortie" value="{{collaborateur.date_sortie }}" required)
+			
+			.form-group
+				label(for="motif" class="col-sm-2 control-label") Motif :
+				div.col-sm-10
+					input.form-control(type="text" name='motif' id="motif " ng-model="collaborateur.motif ")
+					
+
+			.form-group
+				div(class="col-sm-offset-2 col-sm-10")
+					if id
+						button(type='submit' id='btn' class='btn btn-default' ng-click="deleteCollaborateur(collaborateur._id,collaborateur.date_sortie, collaborateur.motif )") 	Supprimer
+			
+
+
+
+	script(text="text/javascript").
+		var app = angular.module('postEditApp', []);
+		app.controller('getPost', function($scope, $http, $location) {
+			$http.get("/collaborateurs/action/#{id}")
+				.success(function(response) {
+					$scope.collaborateur = response;
+					$scope.collaborateur.date_naissance = new Date($scope.collaborateur.date_naissance);
+					$scope.collaborateur.date_entree = new Date($scope.collaborateur.date_entree);
+				});
+            
+
+
+			$scope.deleteCollaborateur = function (id,date_sortie,motif ) {
+				$http.put("/collaborateurs/"+id,{ date_sortie:date_sortie, motif:motif })
+					.success(function(response) {
+						window.location.assign('/');
+					});
+			}
+		});

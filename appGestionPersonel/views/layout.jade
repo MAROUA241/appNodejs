@@ -1,0 +1,33 @@
+doctype html
+html
+	head
+		title= site.title
+		link(rel='stylesheet', href='/stylesheets/bootstrap.min.css')
+		link(rel='stylesheet', href='/stylesheets/style.css')
+	body
+		script(src='/bower_components/angular/angular.js')
+		script(src='/bower_components/angular-bootstrap/ui-bootstrap.min.js')
+		script(src='/js/jquery.min.js')
+		#header
+			nav(class='navbar navbar-inverse')
+				.container-fluid
+					.navbar-header
+						a.navbar-brand(href='#')
+							div.nav-header
+								img.nav-header-img(src="/images/logo.gif")
+								span.nav-header-title=site.title
+					div(class='collapse navbar-collapse')
+						ul(class='nav navbar-nav')
+							li.active
+								a(href='/')
+									span(class='post_option glyphicon glyphicon-home')
+							li
+								a(href="/collaborateurs/new") Ajouter collaborateur
+							li
+								a(href="/collaborateurs") List de collaborateurs
+							li
+								a(href="/anciencollaborateurs") List de collaborateurs supprimés
+							li
+								a(href="/statistiques") Statistiques
+	block content
+script(src='/js/bootstrap.min.js')

@@ -1,0 +1,44 @@
+extends layout
+
+block content
+	div(class='body' ng-app="statistiquesApp" ng-controller="getStatistiques")
+		h1 Statistiques sur le salaire moyen, minimale et maximale dans notre entreprise
+		hr
+		hr
+		br
+		br
+		ul
+			li Le salaire moyenne : {{ salMoy }}
+			br
+			li Le salaire minimale :{{ salMin }}
+			br
+			li Le salaire maximale : {{ salMax }}
+			br
+
+			
+	script(text="text/javascript").
+		var app = angular.module('statistiquesApp', []);
+		app.controller('getStatistiques', function($scope, $http, $location) {
+			$http.get("/collaborateurs/action/")
+				.success(function(response) {
+					$scope.collaborateurs = response;
+				     	var salaires = [];
+							angular.forEach($scope.collaborateurs, function(collaborateur, key) {
+							  	this.push(collaborateur.salaire);
+							}, salaires);
+							var temp =0;
+							var salmax =0;
+							var salmin = salaires[0];
+							for (var i = 0; i<salaires.length; i++) {
+							if(salaires[i] != null)
+							temp +=salaires[i];
+							    if(salmax < salaires[i])
+							    salmax =salaires[i];
+							    if (salmin> salaires[i] )
+							    salmin =salaires[i];
+							}
+							$scope.salMoy=temp/salaires.length;
+							$scope.salMin=salmin;
+							$scope.salMax=salmax;
+				});
+		});

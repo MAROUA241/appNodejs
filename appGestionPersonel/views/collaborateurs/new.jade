@@ -1,0 +1,82 @@
+block content
+	if !nolayout
+		extends ../layout
+
+	- var method = "POST"
+	- var action = "/collaborateurs/action/"
+	- var legend = "Ajouter un collaborateur"
+	if id
+		- var method = "PUT"
+		- var action = "/collaborateurs/action/"+id
+		- var legend = "Editer un collaborateur"
+
+
+
+	form.form-horizontal(id="formAddPost" role="form" ng-app="postEditApp" ng-controller="getPost" novalidate)
+		fieldset
+			legend= legend
+			.form-group
+				label(for="prenom" class="col-sm-2 control-label") Prenom :
+				div.col-sm-10
+					input.form-control(type="text" name="prenom" id="prenom" ng-model="collaborateur.prenom" value="{{collaborateur.prenom }}" required)
+			.form-group
+				label(for="nom" class="col-sm-2 control-label") nom :
+				div.col-sm-10
+					input.form-control(type="text" name='nom ' id="nom " ng-model="collaborateur.nom " value="{{collaborateur.nom }}" required)
+			.form-group
+				label(for="date_naissance" class="col-sm-2 control-label") Date de naissance :
+				div.col-sm-10
+					input.form-control(type="date" name='date_naissance' id="date_naissance " ng-model="collaborateur.date_naissance " value="{{ collaborateur.date_naissance  }}" required)
+			.form-group
+				label(for="poste" class="col-sm-2 control-label") Poste :
+				div.col-sm-10
+					input.form-control(type="text" name='poste' id="poste " ng-model="collaborateur.poste " value="{{ collaborateur.poste  }}" required)
+			.form-group
+				label(for="salaire" class="col-sm-2 control-label") Salaire :
+				div.col-sm-10
+					input.form-control(type="number" name='salaire' id="salaire " ng-model="collaborateur.salaire " value="{{ collaborateur.salaire  }}" required)
+			.form-group
+				label(for="date_entree" class="col-sm-2 control-label") Date d'entrée :
+				div.col-sm-10
+					input.form-control(type="date" name='date_entree' id="date_entree " ng-model="collaborateur.date_entree " value="{{ collaborateur.date_entree  }}" required)
+
+			.form-group
+				label(for="mail" class="col-sm-2 control-label") Mail :
+				div.col-sm-10
+					input.form-control(type="email" name='mail' id="mail " ng-model="collaborateur.mail " value="{{ collaborateur.mail  }}" required)
+			.form-group
+				div(class="col-sm-offset-2 col-sm-10")
+					if id
+						button(type='submit' id='btn' class='btn btn-default' ng-click="editCollaborateur(collaborateur._id,collaborateur.prenom, collaborateur.nom, collaborateur.date_naissance ,collaborateur.poste, collaborateur.salaire, collaborateur.date_entree,collaborateur.mail )") 	Modifier
+
+					else
+						button(type='submit' id='btn' class='btn btn-default' ng-click="createCollaborateur(collaborateur.prenom, collaborateur.nom, collaborateur.date_naissance ,collaborateur.poste, collaborateur.salaire, collaborateur.date_entree,  collaborateur.mail )") 	Ajouter
+			
+
+
+
+	script(text="text/javascript").
+		var app = angular.module('postEditApp', []);
+		app.controller('getPost', function($scope, $http, $location) {
+			$http.get("/collaborateurs/action/#{id}")
+				.success(function(response) {
+					$scope.collaborateur = response;
+					$scope.collaborateur.date_naissance = new Date($scope.collaborateur.date_naissance);
+					$scope.collaborateur.date_entree = new Date($scope.collaborateur.date_entree);
+				});
+            
+			$scope.createCollaborateur = function(prenom, nom, date_naissance,poste, salaire, date_entree, mail) {
+				$http.post("action/", { prenom: prenom, nom: nom, date_naissance: date_naissance, poste:poste, salaire:salaire, date_entree:date_entree, mail: mail  })
+					.success(function(response) {
+						window.location.assign('/');
+						
+					});
+			}
+
+			$scope.editCollaborateur = function (id,prenom, nom, date_naissance,poste, salaire, date_entree, mail ) {
+				$http.put("/collaborateurs/"+id,{ prenom:prenom, nom: nom, date_naissance: date_naissance,poste:poste, salaire:salaire, date_entree:date_entree, mail: mail })
+					.success(function(response) {
+						window.location.assign('/');
+					});
+			}
+		});

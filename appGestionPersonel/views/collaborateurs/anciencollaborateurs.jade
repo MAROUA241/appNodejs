@@ -1,0 +1,31 @@
+extends ../layout
+
+block content
+	h1 La liste de collaborateurs supprimés 
+	.posts_container(ng-app="collaborateursListApp" ng-controller="getCollaborateurs")
+		div(class='panel panel-post' ng-repeat="collaborateur in collaborateurs")
+			.panel-heading
+				.post_title_container
+					span.collaborateur_title
+					a(href="/collaborateurs/{{ collaborateur._id }}")  {{ collaborateur.prenom }} {{ collaborateur.nom }}
+					br
+					br
+				
+				
+
+			
+	script(text="text/javascript").
+		var app = angular.module('collaborateursListApp', []);
+		app.controller('getCollaborateurs', function($scope, $http, $location) {
+			$http.get("/collaborateurs/action/")
+				.success(function(response) {
+					
+					var tab = [];
+							angular.forEach(response, function(collaborateur, key) {
+								if(collaborateur.date_sortie !=null )
+							  	this.push(collaborateur);
+							}, tab);
+							$scope.collaborateurs = tab;
+					
+				});
+		});
